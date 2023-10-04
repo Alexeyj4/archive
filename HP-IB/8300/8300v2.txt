@@ -1,0 +1,46 @@
+scratch
+10 OUTPUT 814;"AFG1:DEST 'Audio Out'"
+20 OUTPUT 814;"AFG1:OUTP 1V"
+30 OUTPUT 814;"AFG1:FREQ 8300Hz"
+
+40 res_freq=0
+45 maxamp=0
+
+50 for gen_freq=81run
+00 to 8500 step 10
+55 !gen_freq=8400
+60 OUTPUT 814;"AFG1:FREQ "&VAL$(gen_freq)&"Hz"
+100 OUTPUT 814;":MEAS:AFR:ACL?"
+110 ENTER 814;amp
+
+112 if amp>maxamp then 
+113 res_freq=gen_freq
+114 maxamp=amp 
+116 end if
+
+120 PRINT gen_freq,":",amp
+150 next gen_freq
+200 print "Step1/2. Resonance frequency: ", res_freq
+210 print res_freq
+
+
+300 for gen_freq=res_freq-20 to res_freq+20 step 1
+310 OUTPUT 814;"AFG1:FREQ "&VAL$(gen_freq)&"Hz"
+320 OUTPUT 814;":MEAS:AFR:ACL?"
+330 ENTER 814;amp
+
+340 if amp>maxamp then 
+350 res_freq=gen_freq
+360 maxamp=amp 
+370 end if
+
+380 PRINT gen_freq,":",amp
+390 next gen_freq
+400 print "Step2/2. Resonance frequency:", res_freq
+410 print res_freq
+
+
+
+
+500 END
+
